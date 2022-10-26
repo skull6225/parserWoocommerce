@@ -67,12 +67,18 @@ public class WooCommerceProductUpdate {
     }
 
     private String getBeautifyJson(Object object) throws JsonProcessingException {
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        return ow.writeValueAsString(object)
-                .replace("{", "")
-                .replace("}", "")
-                .replace("[", "")
-                .replace("]", "");
+        String beautifyJson = null;
+        try {
+            beautifyJson = object.toString()
+                    .replace(", ", ", \n")
+                    .replace("{", "")
+                    .replace("}", "")
+                    .replace("[", "")
+                    .replace("]", "");
+        } catch (Exception e) {
+            beautifyJson = "OutOfMemory";
+        }
+        return beautifyJson;
     }
 
     private Map<String, String> transformResourceToMetaFormat(String metaKeyFieldName, List<String> images) {
