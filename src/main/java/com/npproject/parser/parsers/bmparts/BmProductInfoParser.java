@@ -1,8 +1,6 @@
 package com.npproject.parser.parsers.bmparts;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -10,13 +8,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
@@ -62,7 +53,7 @@ public class BmProductInfoParser extends ParserUtil {
         int responceCode = client.executeMethod(method);
 
         if(responceCode == 403){
-            TimeUnit.MINUTES.sleep(60);
+            TimeUnit.MINUTES.sleep(10);
             etProductInfo(productsList, finalI);
         }
 

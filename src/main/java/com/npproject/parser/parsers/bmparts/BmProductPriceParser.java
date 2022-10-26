@@ -5,17 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.http.HttpResponse;
-
 
 import com.npproject.parser.models.BmModels.BmModel;
 import com.npproject.parser.parsers.utils.ParserUtil;
-import org.springframework.web.client.RestClientException;
 
 public class BmProductPriceParser extends ParserUtil {
 

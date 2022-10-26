@@ -1,5 +1,13 @@
 package com.npproject.parser.parsers.bmparts;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -9,12 +17,6 @@ import com.icoderman.woocommerce.WooCommerce;
 import com.icoderman.woocommerce.WooCommerceAPI;
 import com.icoderman.woocommerce.oauth.OAuthConfig;
 import com.npproject.parser.models.BmModels.BmModel;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class WooCommerceProductUpdate {
     OAuthConfig config = new OAuthConfig("https://avtozapchastunu.com", "ck_71b6c7f511fb36b5888c63260006b0b7114b29de", "cs_0cb9e645cd62f37658e8b7dbf84f937575aabdd8");
@@ -32,7 +34,7 @@ public class WooCommerceProductUpdate {
 
     }
 
-    public void modifyAndUpdate(BmModel product) throws JsonProcessingException {
+    public void modifyAndUpdate(BmModel product) throws JsonProcessingException, InterruptedException {
 
         System.out.println("Start update wooCommerce");
 
@@ -52,7 +54,14 @@ public class WooCommerceProductUpdate {
                 transformResourceToMetaFormat("fifu_list_url", product.getInfo().getImages()),
                 transformResourceToMetaFormat("_wc_cog_cost", Arrays.asList(product.getPriceUah()))
         ));
-        wooCommerce.create(EndpointBaseType.PRODUCTS.getValue(), newMapProduct);
+
+        try {
+            wooCommerce.create(EndpointBaseType.PRODUCTS.getValue(), newMapProduct);
+        } catch (Exception e) {
+            System.out.println("Something wrong when upload woocommerce product, wait 10 sec");
+            TimeUnit.SECONDS.sleep(10);
+            modifyAndUpdate(product);
+        }
 
         System.out.println("end create");
     }

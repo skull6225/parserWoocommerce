@@ -4,7 +4,6 @@ package com.npproject.parser;
 import java.io.IOException;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.npproject.parser.models.BmModels.BmModel;
 import com.npproject.parser.parsers.bmparts.BmProductInfoParser;
 import com.npproject.parser.parsers.bmparts.BmProductPriceParser;
