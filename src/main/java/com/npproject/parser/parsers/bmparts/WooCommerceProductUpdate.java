@@ -32,7 +32,7 @@ public class WooCommerceProductUpdate {
 
     }
 
-    private void modifyAndUpdate(BmModel product) throws JsonProcessingException {
+    public void modifyAndUpdate(BmModel product) throws JsonProcessingException {
 
         System.out.println("Start update wooCommerce");
 

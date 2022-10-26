@@ -39,36 +39,17 @@ public class BmProductInfoParser extends ParserUtil {
 
         for (BmModel product : productsList) {
             try {
-                productListWithInfo.add(etProductInfo(product, x));
-                wooCommerceProductUpdate.updateProduct(productListWithInfo);
-                productListWithInfo = new ArrayList<>();
+                wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(product, x));
                 x++;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            if (x == 5000) {
-//
-//                wooCommerceProductUpdate.updateProduct(productListWithInfo);
-//                productListWithInfo = new ArrayList<>();
-//
-//                x = 0;
-//                TimeUnit.MINUTES.sleep(50);
-//            }
-        }
-
-        try {
-            FileOutputStream fos = new FileOutputStream("t.tmp");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(productListWithInfo);
-            oos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return productListWithInfo;
     }
 
-    private BmModel etProductInfo(BmModel productsList, int finalI) throws IOException {
+    private BmModel etProductInfo(BmModel productsList, int finalI) throws IOException, InterruptedException {
         System.out.println(finalI);
         String fooResourceUrl = "https://api.bm.parts/product/" + productsList.getId();
 
@@ -78,19 +59,14 @@ public class BmProductInfoParser extends ParserUtil {
         method.setRequestHeader("User-Agent","Awesome-BM-Parts-App");
         method.setRequestHeader("Authorization","56a8c7fe-bd3f-482f-850f-4fe0f5bf31bf.GfXBi-e9SO1OrJ9TKhRYvoYTKGE");
 
-        client.executeMethod(method);
+        int responceCode = client.executeMethod(method);
+
+        if(responceCode == 403){
+            TimeUnit.MINUTES.sleep(60);
+            etProductInfo(productsList, finalI);
+        }
 
         String responseBodyAsString = method.getResponseBodyAsString();
-
-//        HttpEntity<String> httpEntity = new HttpEntity<>("", headers);
-//        ResponseEntity<String> response = null;
-//
-//        try {
-//            response = new RestTemplate().exchange(fooResourceUrl, HttpMethod.GET, httpEntity, String.class);
-//        } catch (RestClientException e) {
-//            System.out.println(response.getHeaders());
-//            e.printStackTrace();
-//        }
 
         return parseProductInfo(productsList, responseBodyAsString);
     }

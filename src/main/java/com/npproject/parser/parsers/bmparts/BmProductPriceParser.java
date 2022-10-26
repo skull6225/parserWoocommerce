@@ -37,16 +37,6 @@ public class BmProductPriceParser extends ParserUtil {
 
         String responseBodyAsString = method.getResponseBodyAsString();
 
-
-//        HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
-//        ResponseEntity<String> response = null;
-//        try {
-//            response = restTemplate.exchange(fooResourceUrl, HttpMethod.POST, httpEntity, String.class);
-//        } catch (RestClientException e) {
-//            System.out.println(response);
-//            e.printStackTrace();
-//        }
-
         return convertResponse(responseBodyAsString);
     }
 
