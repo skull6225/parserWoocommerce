@@ -1,6 +1,9 @@
 package com.npproject.parser.parsers.bmparts;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -12,8 +15,10 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.npproject.parser.models.BmModels.BmModel;
 import com.npproject.parser.models.BmModels.info.BmProductInfo;
 import com.npproject.parser.models.BmModels.info.analog.AnalogInfo;
@@ -29,6 +34,7 @@ public class BmProductInfoParser extends ParserUtil {
         int x = 0;
 
         for (BmModel product : productsList) {
+//        for(int i = 0; i < 3000; i ++) {
             try {
                 wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(product, x));
                 x++;
@@ -57,28 +63,36 @@ public class BmProductInfoParser extends ParserUtil {
             etProductInfo(productsList, finalI);
         }
 
-        String responseBodyAsString = method.getResponseBodyAsString();
+        InputStream responseBodyAsString = method.getResponseBodyAsStream();
 
         return parseProductInfo(productsList, responseBodyAsString);
     }
 
-    private BmModel parseProductInfo(BmModel product, String responceBody) {
+    private BmModel parseProductInfo(BmModel product, InputStream responseBody) throws UnsupportedEncodingException {
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
-        JsonObject jsonObject = (JsonObject) parser.parse(responceBody);
-        JsonElement jsonProductElement = jsonObject.get("product");
-        BmProductInfo emp = gson.fromJson(jsonProductElement, BmProductInfo.class);
 
-        emp.setDefaultImage(BASIC_IMAGE_URL + emp.getDefaultImage().replace("\\", "/"));
-        emp.setImages(emp.getImages().stream().map(m -> {
-                    String imageUrl = BASIC_IMAGE_URL + m.replace("\\", "/");
-                    return imageUrl; //imageUrl.replace("/photo/", "/photos/320x320/");
-                })
-                .collect(Collectors.toList()));
+        try {
+            JsonObject jsonObject = (JsonObject)parser.parse(
+                    new InputStreamReader(responseBody, "UTF-8"));
+            JsonElement jsonProductElement = jsonObject.get("product");
+            BmProductInfo emp = gson.fromJson(jsonProductElement, BmProductInfo.class);
 
-        emp.setAnalogsList(getAnalogsInfo(gson, (JsonObject) jsonProductElement));
+            emp.setDefaultImage(BASIC_IMAGE_URL + emp.getDefaultImage().replace("\\", "/"));
+            emp.setImages(emp.getImages().stream().map(m -> {
+                        String imageUrl = BASIC_IMAGE_URL + m.replace("\\", "/");
+                        return imageUrl; //imageUrl.replace("/photo/", "/photos/320x320/");
+                    })
+                    .collect(Collectors.toList()));
 
-        product.setInfo(emp);
+            emp.setAnalogsList(getAnalogsInfo(gson, (JsonObject) jsonProductElement));
+
+            product.setInfo(emp);
+        } catch (OutOfMemoryError | JsonIOException | UnsupportedEncodingException | JsonSyntaxException e) {
+            System.out.println("out of memory");
+            product.setName("OutOfMemory");
+            e.printStackTrace();
+        }
 
         return product;
     }
