@@ -12,16 +12,17 @@ import com.npproject.parser.parsers.bmparts.WooCommerceProductUpdate;
 
 public class ParserApplication {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 //        PageParser parser = new PageParser();
 
         BmProductPriceParser adParser = new BmProductPriceParser();
         BmProductInfoParser bmProductInfoParser = new BmProductInfoParser();
         WooCommerceProductUpdate wooCommerceProductUpdate = new WooCommerceProductUpdate();
 
-        List<BmModel> bmModelsList = adParser.getBmModelsList();
-
-        List<BmModel> productsWithInfo = bmProductInfoParser.getProductsInfo(bmModelsList);
+//        List<BmModel> bmModelsList = adParser.getBmModelsList();
+        int bmModelsListCount = adParser.getBmModelsList();
+        bmProductInfoParser.getProductsInfo(bmModelsListCount);
+//        List<BmModel> productsWithInfo = bmProductInfoParser.getProductsInfo();
 
 //        wooCommerceProductUpdate.updateProduct(productsWithInfo);
 

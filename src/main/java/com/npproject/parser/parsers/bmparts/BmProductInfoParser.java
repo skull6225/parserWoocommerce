@@ -1,6 +1,8 @@
 package com.npproject.parser.parsers.bmparts;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -25,18 +27,28 @@ public class BmProductInfoParser extends ParserUtil {
     List<BmModel> productListWithInfo = new ArrayList<>();
     WooCommerceProductUpdate wooCommerceProductUpdate = new WooCommerceProductUpdate();
 
-    public List<BmModel> getProductsInfo(List<BmModel> productsList) throws InterruptedException, JsonProcessingException {
+    public List<BmModel> getProductsInfo(int productCount) throws InterruptedException, IOException, ClassNotFoundException {
 
-        int x = 0;
 
-        for (BmModel product : productsList) {
+        for(int i = 0; i < productCount; i++) {
+            FileInputStream fis = new FileInputStream("t.tmp");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            List<BmModel> products = (List<BmModel>) ois.readObject();
+            ois.close();
+
+            BmModel product = products.get(i);
+
+            fis = null;
+            ois = null;
+            products = null;
+
             try {
-                wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(product, x));
-                x++;
+                wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(product, i));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
 
         return productListWithInfo;
     }
