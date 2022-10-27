@@ -1,9 +1,6 @@
 package com.npproject.parser.parsers.bmparts;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +12,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -34,7 +30,6 @@ public class BmProductInfoParser extends ParserUtil {
         int x = 0;
 
         for (BmModel product : productsList) {
-//        for(int i = 0; i < 3000; i ++) {
             try {
                 wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(product, x));
                 x++;
@@ -63,18 +58,16 @@ public class BmProductInfoParser extends ParserUtil {
             etProductInfo(productsList, finalI);
         }
 
-        InputStream responseBodyAsString = method.getResponseBodyAsStream();
+        String responseBodyAsString = method.getResponseBodyAsString();
 
         return parseProductInfo(productsList, responseBodyAsString);
     }
 
-    private BmModel parseProductInfo(BmModel product, InputStream responseBody) throws UnsupportedEncodingException {
+    private BmModel parseProductInfo(BmModel product, String responceBody) {
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
-
         try {
-            JsonObject jsonObject = (JsonObject)parser.parse(
-                    new InputStreamReader(responseBody, "UTF-8"));
+            JsonObject jsonObject = (JsonObject) parser.parse(responceBody);
             JsonElement jsonProductElement = jsonObject.get("product");
             BmProductInfo emp = gson.fromJson(jsonProductElement, BmProductInfo.class);
 
@@ -88,9 +81,9 @@ public class BmProductInfoParser extends ParserUtil {
             emp.setAnalogsList(getAnalogsInfo(gson, (JsonObject) jsonProductElement));
 
             product.setInfo(emp);
-        } catch (OutOfMemoryError | JsonIOException | UnsupportedEncodingException | JsonSyntaxException e) {
-            System.out.println("out of memory");
-            product.setName("OutOfMemory");
+        } catch (OutOfMemoryError | JsonSyntaxException e) {
+            System.out.println("Product info error, set error name");
+            product.setName("Error");
             e.printStackTrace();
         }
 
