@@ -75,7 +75,7 @@ public class WooCommerceProductUpdate {
                     .replace("}", "")
                     .replace("[", "")
                     .replace("]", "");
-        } catch (OutOfMemoryError | Exception e) {
+        } catch (OutOfMemoryError e) {
             beautifyJson = "OutOfMemory";
             System.out.println("OutOfMemory");
         }

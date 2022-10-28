@@ -27,23 +27,14 @@ public class BmProductInfoParser extends ParserUtil {
     List<BmModel> productListWithInfo = new ArrayList<>();
     WooCommerceProductUpdate wooCommerceProductUpdate = new WooCommerceProductUpdate();
 
-    public List<BmModel> getProductsInfo(int productCount) throws InterruptedException, IOException, ClassNotFoundException {
+    public List<BmModel> getProductsInfo(List<BmModel> products) throws InterruptedException, IOException, ClassNotFoundException {
 
-
-        for(int i = 0; i < productCount; i++) {
-            FileInputStream fis = new FileInputStream("t.tmp");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            List<BmModel> products = (List<BmModel>) ois.readObject();
-            ois.close();
-
-            BmModel product = products.get(i);
-
-            fis = null;
-            ois = null;
-            products = null;
+        int x = 0;
+        for (BmModel product : products) {
 
             try {
-                wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(product, i));
+                wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(product, x));
+                x++;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -59,13 +50,13 @@ public class BmProductInfoParser extends ParserUtil {
 
         HttpClient client = new HttpClient();
         GetMethod method = new GetMethod(fooResourceUrl);
-        method.setRequestHeader("Accept","application/json");
-        method.setRequestHeader("User-Agent","Awesome-BM-Parts-App");
-        method.setRequestHeader("Authorization","56a8c7fe-bd3f-482f-850f-4fe0f5bf31bf.GfXBi-e9SO1OrJ9TKhRYvoYTKGE");
+        method.setRequestHeader("Accept", "application/json");
+        method.setRequestHeader("User-Agent", "Awesome-BM-Parts-App");
+        method.setRequestHeader("Authorization", "56a8c7fe-bd3f-482f-850f-4fe0f5bf31bf.GfXBi-e9SO1OrJ9TKhRYvoYTKGE");
 
         int responceCode = client.executeMethod(method);
 
-        if(responceCode == 403){
+        if (responceCode == 403) {
             TimeUnit.MINUTES.sleep(10);
             etProductInfo(productsList, finalI);
         }

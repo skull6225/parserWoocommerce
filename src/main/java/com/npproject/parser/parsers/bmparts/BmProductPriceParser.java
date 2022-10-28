@@ -1,41 +1,20 @@
 package com.npproject.parser.parsers.bmparts;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.io.FilenameUtils;
 
 import com.npproject.parser.models.BmModels.BmModel;
 import com.npproject.parser.parsers.utils.ParserUtil;
 
 public class BmProductPriceParser extends ParserUtil {
 
-    public int getBmModelsList() throws IOException {
+    public List<BmModel> getBmModelsList() throws IOException {
         String fooResourceUrl = "https://api.bm.parts/prices/list";
-
-        try {
-            FileInputStream fis = new FileInputStream("t.tmp");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            List<BmModel> products = (List<BmModel>) ois.readObject();
-            ois.close();
-            int productsCount = products.size();
-
-            fis = null;
-            ois = null;
-            products = null;
-
-            return productsCount;
-        } catch (FileNotFoundException | ClassNotFoundException e) {
 
             String body = "{\n" +
                     "  \"currency\": \"A358000C2947F7AE11E23F5617780B16\"\n" +
@@ -54,17 +33,7 @@ public class BmProductPriceParser extends ParserUtil {
 
             List<BmModel> bmModels = convertResponse(responseBodyAsString);
 
-            int productsCount = bmModels.size();
-
-            FileOutputStream fos = new FileOutputStream("t.tmp");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(bmModels);
-            oos.close();
-
-            bmModels = null;
-
-            return productsCount;
-        }
+            return bmModels;
     }
 
     private List<BmModel> convertResponse(String response) {

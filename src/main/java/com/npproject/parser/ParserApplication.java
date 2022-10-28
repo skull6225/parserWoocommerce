@@ -20,8 +20,8 @@ public class ParserApplication {
         WooCommerceProductUpdate wooCommerceProductUpdate = new WooCommerceProductUpdate();
 
 //        List<BmModel> bmModelsList = adParser.getBmModelsList();
-        int bmModelsListCount = adParser.getBmModelsList();
-        bmProductInfoParser.getProductsInfo(bmModelsListCount);
+        List<BmModel> bmModelsList = adParser.getBmModelsList();
+        bmProductInfoParser.getProductsInfo(bmModelsList);
 //        List<BmModel> productsWithInfo = bmProductInfoParser.getProductsInfo();
 
 //        wooCommerceProductUpdate.updateProduct(productsWithInfo);
