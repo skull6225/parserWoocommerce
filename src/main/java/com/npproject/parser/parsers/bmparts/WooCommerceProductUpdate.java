@@ -2,6 +2,7 @@ package com.npproject.parser.parsers.bmparts;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -35,8 +36,8 @@ public class WooCommerceProductUpdate {
     }
 
     public int getProductCount() {
-        List all = wooCommerce.getAll(EndpointBaseType.PRODUCTS.getValue());
-        return all.size();
+        List all = wooCommerce.getAll("reports/products/totals");
+        return (int) ((LinkedHashMap) all.get(2)).get("total");
     }
 
     public void modifyAndUpdate(BmModel product) throws JsonProcessingException, InterruptedException {
