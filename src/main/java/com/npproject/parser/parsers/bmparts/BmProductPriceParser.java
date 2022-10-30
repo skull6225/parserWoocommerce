@@ -3,6 +3,7 @@ package com.npproject.parser.parsers.bmparts;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -13,7 +14,7 @@ import com.npproject.parser.parsers.utils.ParserUtil;
 
 public class BmProductPriceParser extends ParserUtil {
 
-    public List<BmModel> getBmModelsList() throws IOException {
+    public List<BmModel> getBmModelsList() throws IOException, InterruptedException {
         String fooResourceUrl = "https://api.bm.parts/prices/list";
 
             String body = "{\n" +
@@ -27,9 +28,14 @@ public class BmProductPriceParser extends ParserUtil {
             method.setRequestHeader("User-Agent", "Awesome-BM-Parts-App");
             method.setRequestHeader("Authorization", "56a8c7fe-bd3f-482f-850f-4fe0f5bf31bf.GfXBi-e9SO1OrJ9TKhRYvoYTKGE");
 
-            client.executeMethod(method);
+        int responseStatus = client.executeMethod(method);
 
-            String responseBodyAsString = method.getResponseBodyAsString();
+        if (responseStatus != 200) {
+            TimeUnit.MINUTES.sleep(61);
+            getBmModelsList();
+        }
+
+        String responseBodyAsString = method.getResponseBodyAsString();
 
             List<BmModel> bmModels = convertResponse(responseBodyAsString);
 
