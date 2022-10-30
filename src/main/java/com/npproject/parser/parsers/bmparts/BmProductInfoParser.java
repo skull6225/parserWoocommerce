@@ -57,7 +57,7 @@ public class BmProductInfoParser extends ParserUtil {
         int responceCode = client.executeMethod(method);
 
         if (responceCode == 403) {
-            TimeUnit.MINUTES.sleep(10);
+            TimeUnit.MINUTES.sleep(50);
             etProductInfo(productsList, finalI);
         }
 
