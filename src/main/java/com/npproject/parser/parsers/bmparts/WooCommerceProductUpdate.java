@@ -84,6 +84,9 @@ public class WooCommerceProductUpdate {
         } catch (OutOfMemoryError e) {
             beautifyJson = "OutOfMemory";
             System.out.println("OutOfMemory");
+        } catch (NullPointerException e) {
+            beautifyJson = null;
+            System.out.println("null");
         }
         return beautifyJson;
     }
