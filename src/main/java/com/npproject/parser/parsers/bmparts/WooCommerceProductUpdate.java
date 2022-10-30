@@ -34,6 +34,11 @@ public class WooCommerceProductUpdate {
 
     }
 
+    public int getProductCount() {
+        List all = wooCommerce.getAll(EndpointBaseType.PRODUCTS.getValue());
+        return all.size();
+    }
+
     public void modifyAndUpdate(BmModel product) throws JsonProcessingException, InterruptedException {
 
         System.out.println("Start update wooCommerce");

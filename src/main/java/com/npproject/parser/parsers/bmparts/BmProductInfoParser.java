@@ -29,17 +29,17 @@ public class BmProductInfoParser extends ParserUtil {
 
     public List<BmModel> getProductsInfo(List<BmModel> products) throws InterruptedException, IOException, ClassNotFoundException {
 
-        int x = 0;
-        for (BmModel product : products) {
+        int productCount = wooCommerceProductUpdate.getProductCount();
+        System.out.println(productCount);
 
+        for(int i = productCount; i < products.size(); i++) {
+//        for (BmModel product : products) {
             try {
-                wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(product, x));
-                x++;
+                wooCommerceProductUpdate.modifyAndUpdate(etProductInfo(products.get(i), i));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
 
         return productListWithInfo;
     }
