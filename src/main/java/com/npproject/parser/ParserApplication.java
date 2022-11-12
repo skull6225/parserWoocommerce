@@ -1,6 +1,7 @@
 package com.npproject.parser;
 
 
+import com.npproject.parser.parsers.bmparts.woocomerceApi.WooCommerce;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,6 +15,9 @@ public class ParserApplication {
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 //        PageParser parser = new PageParser();
+
+//        WooCommerce wooCommerce = new WooCommerce();
+//        wooCommerce.getProducts();
 
         BmProductPriceParser adParser = new BmProductPriceParser();
         BmProductInfoParser bmProductInfoParser = new BmProductInfoParser();

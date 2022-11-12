@@ -20,7 +20,7 @@ import com.icoderman.woocommerce.oauth.OAuthConfig;
 import com.npproject.parser.models.BmModels.BmModel;
 
 public class WooCommerceProductUpdate {
-    OAuthConfig config = new OAuthConfig("https://avtozapchastunu.com", "ck_71b6c7f511fb36b5888c63260006b0b7114b29de", "cs_0cb9e645cd62f37658e8b7dbf84f937575aabdd8");
+    OAuthConfig config = new OAuthConfig("https://avtozapchastunu.com", "ck_479ec4293e6bd001de1111ec176a5e8b46ff4ce2", "cs_8db1b2c07c989957ec0af01c8399475ee42a1a1c");
     WooCommerce wooCommerce = new WooCommerceAPI(config, ApiVersionType.V3);
 
     public void updateProduct(List<BmModel> bmModel) throws JsonProcessingException, InterruptedException {
