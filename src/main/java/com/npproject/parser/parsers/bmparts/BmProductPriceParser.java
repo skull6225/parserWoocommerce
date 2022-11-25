@@ -31,7 +31,7 @@ public class BmProductPriceParser extends ParserUtil {
         int responseStatus = client.executeMethod(method);
 
         if (responseStatus == 403) {
-            TimeUnit.MINUTES.sleep(61);
+            TimeUnit.MINUTES.sleep(10);
             getBmModelsList();
         }
 
